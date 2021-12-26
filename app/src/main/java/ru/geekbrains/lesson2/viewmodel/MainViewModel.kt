@@ -12,12 +12,18 @@ class MainViewModel(private val liveData:MutableLiveData<AppState> = MutableLive
     }
 
     fun getWeatherFromServer(){
+        liveData.postValue(AppState.Loading(0))
         Thread{
             //liveData.value = Any()
-            liveData.postValue(AppState.Loading(0))
             sleep(2000)
-            liveData.postValue(AppState.Success("Холодно звездец"))
-            sleep(2000)
+            val rand = (1..40).random()
+            if(rand>25){
+                liveData.postValue(AppState.Success("Жарко звездец"))
+            }else{
+                liveData.postValue(AppState.Success("Холодно звездец"))
+            }
+
+            //sleep(2000)
             //liveData.postValue(AppState.Error())
         }.start()
     }
