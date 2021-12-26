@@ -16,11 +16,12 @@ class MainViewModel(private val liveData:MutableLiveData<AppState> = MutableLive
         Thread{
             //liveData.value = Any()
             sleep(2000)
+            //liveData.postValue(AppState.Error(IllegalStateException("")))
             val rand = (1..40).random()
             if(rand>25){
                 liveData.postValue(AppState.Success("Жарко звездец"))
             }else{
-                liveData.postValue(AppState.Success("Холодно звездец"))
+                liveData.postValue(AppState.Error(IllegalStateException("")))
             }
 
             //sleep(2000)

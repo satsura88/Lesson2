@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import ru.geekbrains.lesson2.R
 import ru.geekbrains.lesson2.databinding.ActivityMainBinding
 import ru.geekbrains.lesson2.databinding.FragmentMainBinding
@@ -36,11 +37,21 @@ class MainFragment : Fragment() {
 
     fun renderData(appState: AppState){
         when(appState){
-            is AppState.Error -> Toast.makeText(requireContext(), appState.error.message, Toast.LENGTH_SHORT).show()
-            is AppState.Loading -> Toast.makeText(requireContext(), "${appState.progress}", Toast.LENGTH_SHORT).show()
-            is AppState.Success -> Toast.makeText(requireContext(), appState.weatherData, Toast.LENGTH_SHORT).show()
+            is AppState.Error -> {
+                binding.loadingLayout.visibility = View.GONE
+                Snackbar.make(binding.mainView, "Ошибка(",Snackbar.LENGTH_LONG).setAction("Ребут"){
+                    viewModel.getWeatherFromServer()
+                }.show()
+            }
+            is AppState.Loading -> {
+                binding.loadingLayout.visibility = View.VISIBLE
+            }
+            is AppState.Success -> {
+                binding.loadingLayout.visibility = View.GONE
+                Snackbar.make(binding.mainView, "Успех!",Snackbar.LENGTH_LONG).show()
+            }
         }
-
+            //Toast.makeText(requireContext(), appState.weatherData, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
