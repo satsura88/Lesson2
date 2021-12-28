@@ -31,11 +31,12 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        //главная строка урока!!!
         viewModel.getLiveDta().observe(viewLifecycleOwner, Observer<AppState> { renderData(it) })
-        viewModel.getWeatherFromServer()
+        viewModel.getWeather()
     }
 
-    fun renderData(appState: AppState){
+    private fun renderData(appState: AppState){
         when(appState){
             is AppState.Error -> {
                 binding.loadingLayout.visibility = View.GONE
@@ -48,10 +49,13 @@ class MainFragment : Fragment() {
             }
             is AppState.Success -> {
                 binding.loadingLayout.visibility = View.GONE
-                Snackbar.make(binding.mainView, "Успех!",Snackbar.LENGTH_LONG).show()
+                binding.cityName.text = appState.weatherData.city.name
+                binding.cityCoordinates.text = "${appState.weatherData.city.lat} ${appState.weatherData.city.lon}"
+                binding.temperatureValue.text = "${appState.weatherData.temperature}"
+                binding.feelsLikeValue.text = "${appState.weatherData.feelsLike}"
+                Snackbar.make(binding.mainView, "Успех",Snackbar.LENGTH_LONG).show()
             }
         }
-            //Toast.makeText(requireContext(), appState.weatherData, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
